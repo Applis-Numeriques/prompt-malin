@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2563eb">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Prompt malin">
+<title>Mon prompt malin</title>
+<style>
+:root{--bg:#f5f7fb;--card:#ffffff;--tx:#1f2937;--mut:#6b7280;--bd:#e3e8f0;--a:#2563eb;--soft:#eef3ff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f172a;--card:#1e293b;--tx:#e5e7eb;--mut:#94a3b8;--bd:#334155;--a:#60a5fa;--soft:#1e3a5f}}
+:root[data-theme="dark"]{--bg:#0f172a;--card:#1e293b;--tx:#e5e7eb;--mut:#94a3b8;--bd:#334155;--a:#60a5fa;--soft:#1e3a5f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,"Segoe UI",Roboto,sans-serif;line-height:1.45}
+.w{max-width:760px;margin:0 auto;padding:20px 16px 40px}
+h1{margin:0;font-size:1.5rem}
+.sub{margin:4px 0 14px;color:var(--mut);font-size:.9rem}
+.pg{height:6px;background:var(--bd);border-radius:99px;overflow:hidden;margin-bottom:16px}
+.pg i{display:block;height:100%;width:0;background:var(--a);transition:width .3s}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px 16px;margin-bottom:12px}
+.card h2{margin:0 0 10px;font-size:.95rem;display:flex;align-items:center;gap:8px}
+.n{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--a);color:#fff;font-size:.78rem;align-items:center;justify-content:center;flex:none}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:8px 14px;border-radius:99px;font-size:.88rem;cursor:pointer}
+.chip.on{background:var(--a);border-color:var(--a);color:#fff}
+input[type=text]{width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:10px;font-size:16px;background:var(--card);color:var(--tx)}
+.og{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.oc{text-align:left;border:1px solid var(--bd);background:var(--card);color:var(--tx);border-radius:12px;padding:10px 12px;cursor:pointer;display:flex;flex-direction:column;gap:2px}
+.oc span{font-size:.78rem;color:var(--mut)}
+.oc.on{border-color:var(--a);background:var(--soft);box-shadow:0 0 0 2px var(--a) inset}
+label.f{display:block;font-size:.82rem;color:var(--mut);margin:10px 0 4px}
+input[type=range]{width:100%;accent-color:var(--a)}
+.blk{border-left:5px solid var(--c);background:var(--soft);border-radius:8px;padding:8px 12px;margin:0 0 8px}
+.tag{display:block;font-weight:700;font-size:.8rem;color:var(--c)}
+.why{display:block;font-size:.72rem;color:var(--mut);font-style:italic;margin-bottom:4px}
+.blk p{margin:0;font-size:.88rem;white-space:pre-wrap}
+.cp{width:100%;padding:12px;border:0;border-radius:10px;background:var(--a);color:#fff;font-size:1rem;font-weight:700;cursor:pointer;margin-top:4px}
+.cp:disabled{opacity:.4;cursor:not-allowed}
+.rs{background:none;border:0;color:var(--mut);text-decoration:underline;cursor:pointer;font-size:.8rem;margin-top:10px}
+.tips{font-size:.82rem;color:var(--mut);margin:10px 0 0}
+.tips b{color:var(--tx)}
+.ph{color:var(--mut);font-size:.88rem;padding:6px 0}
+.lk{display:inline-block;padding:9px 16px;border:1px solid var(--bd);border-radius:99px;color:var(--a);text-decoration:none;font-weight:600;font-size:.88rem;background:var(--card)}
+.lk:hover{background:var(--soft)}
+</style>
+</head>
+<body>
+<div class="w">
+  <h1>🎓 Mon prompt malin</h1>
+  <p class="sub">Réponds en quelques clics : l'outil prépare une bonne demande à copier-coller dans ton IA.</p>
+  <div class="pg"><i id="pg"></i></div>
+
+  <div class="card"><h2><span class="n">1</span>Ta classe</h2><div class="row" id="niv"></div></div>
+  <div class="card"><h2><span class="n">2</span>La matière</h2><div class="row" id="mat"></div></div>
+  <div class="card"><h2><span class="n">3</span>Le titre du chapitre</h2>
+    <input type="text" id="chap" placeholder="Ex : Les fractions, La Révolution française…" maxlength="120"></div>
+  <div class="card"><h2><span class="n">4</span>Ce que tu veux faire</h2><div class="og" id="obj"></div>
+    <div id="ex" style="display:none">
+      <label class="f">Difficulté</label><div class="row" id="diff"></div>
+      <label class="f">Nombre de questions : <b id="nn">5</b></label><input type="range" id="n" min="3" max="10" value="5">
+    </div>
+    <label class="f">Ce que tu comprends mal (facultatif)</label>
+    <input type="text" id="doute" placeholder="Ex : je ne comprends pas comment simplifier" maxlength="160">
+    <label class="f"><input type="checkbox" id="cours"> Je vais coller mon cours dans la conversation</label>
+  </div>
+
+  <div class="card"><h2>✨ Ton prompt</h2>
+    <div id="out"></div>
+    <button class="cp" id="cp" disabled>Copier le prompt</button>
+    <p class="tips"><b>Ensuite :</b> colle-le dans l'IA, réponds comme à un professeur, puis <b>vérifie avec ton cours</b> : l'IA peut se tromper.</p>
+    <button class="rs" id="rs">Tout recommencer</button>
+  </div>
+  <div class="card"><h2>🔗 Où coller ton prompt ?</h2>
+    <div class="row">
+      <a class="lk" href="https://duck.ai" target="_blank" rel="noopener noreferrer">Duck.ai</a>
+      <a class="lk" href="https://chat.mistral.ai" target="_blank" rel="noopener noreferrer">Mistral (Le Chat)</a>
+      <a class="lk" href="https://gemini.google.com" target="_blank" rel="noopener noreferrer">Gemini</a>
+      <a class="lk" href="https://chatgpt.com" target="_blank" rel="noopener noreferrer">ChatGPT</a>
+    </div>
+    <p class="tips">Demande à ton enseignant quel outil utiliser : certains ont un âge minimum ou demandent l'accord des parents. Ne donne jamais ton nom ni tes informations personnelles.</p>
+  </div>
+</div>
+
+<script>
+const $=i=>document.getElementById(i),
+esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const NIV={'6ème':'cycle 3','5ème':'cycle 4','4ème':'cycle 4','3ème':'cycle 4','Seconde':'','Première':'','Terminale':''};
+const LYC={'Seconde':'S','Première':'P','Terminale':'T'};
+const MAT=['Français','Mathématiques','Histoire-Géographie','EMC','Anglais','Espagnol','Allemand','Physique-Chimie','SVT','Technologie','Arts plastiques','Éducation musicale','EPS'];
+const MATL=[['Français',''],['Mathématiques',''],['Histoire-Géographie',''],['EMC',''],['Anglais',''],['Espagnol',''],['Allemand',''],['Physique-Chimie',''],['SVT',''],['SNT (Sciences numériques et technologie)','S'],['NSI (Numérique et sciences informatiques)','PT'],['SES (Sciences économiques et sociales)',''],['Philosophie','T'],['HGGSP (Histoire-géographie, géopolitique et sciences politiques)','PT'],['HLP (Humanités, littérature et philosophie)','PT'],['LLCE (Langues, littératures et cultures étrangères)','PT'],['Enseignement scientifique','PT'],["Sciences de l'ingénieur",''],['Arts plastiques',''],['Éducation musicale',''],['EPS','']];
+const isLyc=()=>S.niv in LYC;
+const matList=()=>!S.niv?[]:isLyc()?MATL.filter(m=>!m[1]||m[1].includes(LYC[S.niv])).map(m=>m[0]):MAT;
+const DIF=['Facile','Moyenne','Difficile','Progressive'];
+const OBJ=[
+{id:'fiche',e:'📝',t:'Fiche de révision',d:"L'essentiel du chapitre, clair et court"},
+{id:'exo',e:'✏️',t:"Exercices d'entraînement",d:'Un par un, avec des indices',x:1},
+{id:'quiz',e:'❓',t:"Quiz d'interrogation",d:'Teste-toi comme avant un contrôle',x:1},
+{id:'expl',e:'💡',t:'Comprendre une notion',d:'Explications simples avec exemples'},
+{id:'loin',e:'🚀',t:'Aller plus loin',d:'Des défis au-delà du cours',x:1},
+{id:'verif',e:'🔍',t:'Vérifier mon travail',d:'Des pistes, pas la solution'}];
+const S={niv:'',mat:'',chap:'',obj:'',diff:'Moyenne',n:5,cours:false,doute:''};
+const BLK=[['pour','👤 Pour qui','Tu te présentes : ton niveau et ton contexte','#059669'],['qui','🎭 Qui','Tu dis à l\'IA quel rôle jouer','#7c3aed'],['quoi','🎯 Quoi','Tu expliques précisément ce que tu veux','#2563eb'],['com','📐 Comment','Tu fixes la forme de la réponse et les règles','#d97706']];
+
+function build(){
+  const ch='le chapitre « '+S.chap.trim()+' »',d=S.diff.toLowerCase(),n=S.n;
+  const T={
+  fiche:['Crée-moi une fiche de révision claire sur '+ch+'.',"Structure la fiche ainsi : 1) l'essentiel en 5 lignes, 2) les définitions et notions clés, 3) un exemple simple pour chaque notion, 4) les erreurs fréquentes à éviter, 5) trois questions pour vérifier que j'ai compris. Ne donne pas les réponses à ces trois questions : attends que je te réponde. Utilise des titres et des listes courtes."],
+  exo:['Entraîne-moi avec '+n+' exercices de difficulté '+d+' sur '+ch+', du même type que ceux que donne un professeur.',"Donne-moi les exercices UN PAR UN et attends ma réponse avant de passer au suivant. Si je me trompe, ne donne pas la correction tout de suite : pose-moi une question ou un indice pour m'aider à trouver. Si je reste bloqué, explique-moi la méthode. À la fin, fais le bilan de mes points forts et de ce que je dois retravailler."],
+  quiz:['Fais-moi passer un quiz de '+n+' questions de difficulté '+d+' sur '+ch+', en mélangeant QCM et questions courtes.',"Pose les questions UNE PAR UNE et attends ma réponse. Dis-moi si c'est juste ou faux et explique pourquoi en une ou deux phrases. À la fin, donne-moi mon score et les notions à revoir."],
+  expl:['Explique-moi les notions importantes de '+ch+' avec des mots simples, des comparaisons et des exemples de la vie quotidienne.',"Explique une notion à la fois, puis pose-moi une question pour vérifier que j'ai compris avant de continuer. Si ma réponse est fausse, réexplique autrement."],
+  loin:['Propose-moi '+n+' défis ou questions de réflexion de difficulté '+d+', qui vont plus loin que le cours sur '+ch+'.',"Donne-les UN PAR UN. Ne donne pas la solution : guide-moi avec des questions et des indices progressifs. À la fin, dis-moi ce que j'ai bien réussi et ce que je peux explorer ensuite."],
+  verif:["Je vais te donner ma réponse à un exercice sur "+ch+" et je veux que tu m'aides à la vérifier.","Ne me donne PAS la solution. Dis-moi ce qui est juste et ce qui semble faux, puis pose-moi des questions pour m'aider à corriger moi-même. Si je ne trouve toujours pas, donne un indice de plus, jamais la réponse complète d'un coup."]
+  }[S.obj];
+  const pour='Je suis élève de '+S.niv+(isLyc()?' au lycée (programme du lycée)':' au collège (programme du collège, '+NIV[S.niv]+')')+' et je travaille en '+S.mat+'.'+(S.doute.trim()?' Ce que je comprends mal : '+S.doute.trim()+'.':'')+(S.cours?" Je vais te coller mon cours juste après ce message : appuie-toi uniquement dessus.":'');
+  return{qui:'Pour m\'aider, joue le rôle d\'un professeur de '+S.mat+' bienveillant et patient.',quoi:T[0],pour,
+  com:T[1]+" Utilise des mots simples adaptés à mon niveau. Reste dans le programme officiel de ma classe. Ne fais pas mon travail à ma place. Si tu n'es pas sûr de quelque chose, dis-le clairement."};
+}
+const plain=()=>{const b=build();return[b.pour,b.qui,b.quoi,b.com].join('\n\n')};
+const ok=()=>S.niv&&S.mat&&S.chap.trim()&&S.obj;
+
+function chips(id,k,list){$(id).innerHTML=list.map(v=>`<button class="chip${S[k]===v?' on':''}" data-k="${k}" data-v="${esc(v)}">${esc(v)}</button>`).join('')}
+function render(){
+  chips('niv','niv',Object.keys(NIV));{const ml=matList();if(ml.length)chips('mat','mat',ml);else $('mat').innerHTML='<span class="ph">Choisis d\'abord ta classe.</span>'}chips('diff','diff',DIF);
+  $('obj').innerHTML=OBJ.map(o=>`<button class="oc${S.obj===o.id?' on':''}" data-k="obj" data-v="${o.id}"><b>${o.e} ${o.t}</b><span>${o.d}</span></button>`).join('');
+  const cur=OBJ.find(o=>o.id===S.obj);$('ex').style.display=cur&&cur.x?'block':'none';
+  $('nn').textContent=S.n;
+  upd();
+}
+function upd(){
+  const done=[S.niv,S.mat,S.chap.trim(),S.obj].filter(Boolean).length;
+  $('pg').style.width=done*25+'%';
+  if(ok()){const b=build();
+    $('out').innerHTML=BLK.map(([k,t,w,c])=>`<div class="blk" style="--c:${c}"><span class="tag">${t}</span><span class="why">${w}</span><p>${esc(b[k])}</p></div>`).join('');
+  }else $('out').innerHTML='<div class="ph">Complète les 4 étapes ci-dessus ('+done+'/4) pour voir ton prompt.</div>';
+  $('cp').disabled=!ok();
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(!b)return;S[b.dataset.k]=b.dataset.v;if(b.dataset.k==='niv'&&!matList().includes(S.mat))S.mat='';render()});
+$('chap').addEventListener('input',e=>{S.chap=e.target.value;upd()});
+$('doute').addEventListener('input',e=>{S.doute=e.target.value;upd()});
+$('cours').addEventListener('change',e=>{S.cours=e.target.checked;upd()});
+$('n').addEventListener('input',e=>{S.n=+e.target.value;$('nn').textContent=S.n;upd()});
+$('cp').addEventListener('click',async()=>{
+  const t=plain();
+  try{await navigator.clipboard.writeText(t)}catch(_){const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(__){}a.remove()}
+  $('cp').textContent='Copié ✓ Colle-le dans ton IA';setTimeout(()=>$('cp').textContent='Copier le prompt',2500);
+});
+$('rs').addEventListener('click',()=>{Object.assign(S,{niv:'',mat:'',chap:'',obj:'',diff:'Moyenne',n:5,cours:false,doute:''});$('chap').value='';$('doute').value='';$('cours').checked=false;$('n').value=5;render()});
+render();
+if('serviceWorker' in navigator){window.addEventListener('load',()=>{try{navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(_){}})}
+</script>
+</body>
+</html>
